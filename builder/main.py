@@ -32,61 +32,22 @@ env.Replace(
     OBJCOPY="arm-none-eabi-objcopy",
     RANLIB="arm-none-eabi-ranlib",
     SIZETOOL="arm-none-eabi-size",
-
-    ARFLAGS=["rc"],
-
-    SIZEPROGREGEXP=r"^(?:\.text|\.data|\.rodata|\.text.align|\.ARM.exidx)\s+(\d+).*",
-    SIZEDATAREGEXP=r"^(?:\.data|\.bss|\.noinit)\s+(\d+).*",
-    SIZECHECKCMD="$SIZETOOL -A -d $SOURCES",
-    SIZEPRINTCMD='$SIZETOOL -B -d $SOURCES',
-
-    PROGSUFFIX=".elf"
-)
-
-env.Append(
-    BUILDERS = dict(
-        Silent=Builder(
-            action = env.VerboseAction("".join([
-                platform.get_package_dir("tool-cmake"),
-                env.subst("$PROJECT_DIR"),
-                f"-D CMAKE_C_COMPILER = $CC",
-                f"-D CMAKE_CXX_COMPILER = $CXX"
-            ]),
-            "Running a thing.")
-        )
-    )
 )
 
 # Call cmake and make
 env.SConscript("frameworks/baremetal.py", exports = "env")
 
-target_elf = None
-if "nobuild" in COMMAND_LINE_TARGETS:
-    target_elf = os.path.join("$BUILD_DIR", "${PROGNAME}.elf")
-    target_firm = os.path.join("$BUILD_DIR", "${PROGNAME}.bin")
-else:
-    target_elf = env.BuildProgram()
-    target_firm = env.Silent(os.path.join("$BUILD_DIR", "${PROGNAME}"), target_elf)
-    env.Depends(target_firm, "checkprogsize")
+# Assess size of binary, taken from:
+# https://github.com/Wiz-IO/wizio-RPI/blob/main/builder/frameworks/build-pico-cmake.py
 
-AlwaysBuild(env.Alias("nobuild", target_firm))
-target_buildprog = env.Alias("buildprog", target_firm, target_firm)
+env.Execute("$SIZETOOL -B "+ os.path.join("$BUILD_DIR","${PROGNAME}.elf"), None)
 
-# Assess size of binary
+# Replaces the main compiler action with no action
 
-target_size = env.Alias(
-    "size", env.BuildProgram(),
-    env.VerboseAction("$SIZEPRINTCMD", "Calculating size $SOURCE")
-)
-AlwaysBuild(target_size)
-
-# Setup picoprobe debug
 env.Replace(
-    UPLOADER = os.path.join(platform.get_package_dir("tool-rp2040tools")),
-    UPLOADER_FLAGS = ["-v","-D"],
-    UPLOADCMD = "$UPLOADER $UPLOADERFLAGS $SOURCES"
+    SIZETOOL = '',
+    PROGSUFFIX = '',
+    PIOBUILDFILES = [],
+    BUILDERS = dict( ACT = Builder( action = env.VerboseAction( None, None ), suffix = '.none' ) ),
 )
-
-# Need to calculate the binary size, but avoid the stock build step:
-# https://github.com/platformio/platform-espressif32/blob/de553ce4a8592fc140098a767dccf4d5f56ef191/builder/main.py#L392
 
