@@ -1,0 +1,51 @@
+{
+  "name": "pio-rpi-baremetal",
+  "title": "Raspberry Pi Pico (Bare Metal)",
+  "description": "Development and cross compiling platform for Raspberry Pi Pico bare metal",
+  "homepage": "https://github.com/allegheny-college-cmpsc-200-fall-2024",
+  "license": "CC0-1.0",
+  "engines": {
+    "platformio": "^5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/allegheny-college-cmpsc-200-fall-2024/pio-rpi-baremetal"
+  },
+  "version": "0.1.0",
+  "packageRepositories": [
+    "http://dl.platformio.org/packages/manifest.json"
+  ],
+  "frameworks": {
+    "baremetal": {
+        "package": "pico-sdk",
+        "script": "builder/frameworks/baremetal.py"
+    }
+  },
+  "packages": {
+    "pico-sdk": {
+        "owner": "raspberrypi",
+        "type": "framework",
+        "version": "https://github.com/allegheny-college-cmpsc-200-fall-2024/pico-sdk/releases/download/v1.5.15-pio/release.zip"
+    },
+    "toolchain-gccarmnoneeabi": {
+        "owner": "platformio",
+        "type": "toolchain",
+        "version": "~1.90201.0"
+    },
+    "tool-cmake": {
+      "owner": "platformio",
+      "version": "~3.21.0"
+    },
+    "tool-rp2040tools": {
+      "type": "uploader",
+      "owner": "platformio",
+      "version": "~1.0.2"
+    },
+    "tool-openocd-raspberrypi": {
+      "type": "uploader",
+      "optional": true,
+      "owner": "platformio",
+      "version": "~2.1100.0"
+    }
+  }
+}

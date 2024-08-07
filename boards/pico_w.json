@@ -1,0 +1,42 @@
+{
+  "build": {
+    "core": "RP2040",
+    "cpu": "cortex-m0plus",
+    "extra_flags": "-D PICO_CYW43_ARCH_NONE",
+    "f_cpu": "133000000L",
+    "hwids": [
+      [
+        "0x2E8A",
+        "0x00C0"
+      ]
+    ],
+    "mcu": "rp2040",
+    "variant": "RASPBERRY_PI_PICO"
+  },
+  "debug": {
+    "jlink_device": "RP2040_M0_0",
+    "openocd_target": "rp2040.cfg",
+    "svd_path": "rp2040.svd"
+  },
+  "frameworks": [
+    "baremetal"
+  ],
+  "name": "Raspberry Pi Pico W",
+  "upload": {
+    "maximum_ram_size": 270336,
+    "maximum_size": 2097152,
+    "require_upload_port": true,
+    "native_usb": true,
+    "use_1200bps_touch": true,
+    "wait_for_upload_port": false,
+    "protocol": "picotool",
+    "protocols": [
+      "cmsis-dap",
+      "jlink",
+      "raspberrypi-swd",
+      "picotool"
+    ]
+  },
+  "url": "https://www.raspberrypi.org/products/raspberry-pi-pico/",
+  "vendor": "Raspberry Pi"
+}
