@@ -17,22 +17,6 @@ from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
                           Builder, Default, DefaultEnvironment)
 
 env = DefaultEnvironment()
-platform = env.PioPlatform()
-board = env.BoardConfig()
 
-FRAMEWORK_DIR = platform.get_package_dir("pico-sdk")
-env["PICO_SDK_PATH"] = FRAMEWORK_DIR
-
-env.Replace(
-    AR="arm-none-eabi-ar",
-    AS="arm-none-eabi-as",
-    CC="arm-none-eabi-gcc",
-    CXX="arm-none-eabi-g++",
-    GDB="arm-none-eabi-gdb",
-    OBJCOPY="arm-none-eabi-objcopy",
-    RANLIB="arm-none-eabi-ranlib",
-    SIZETOOL="arm-none-eabi-size",
-)
-
-# Call cmake and make
-env.SConscript("frameworks/baremetal.py", exports = "env")
+# This file, HUH, what is it good for? Absolutely one thing (SAY IT AGAIN!)
+env.ProcessProgramDeps()
