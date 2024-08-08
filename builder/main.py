@@ -13,10 +13,22 @@
 # limitations under the License.
 
 import os
-from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
-                          Builder, Default, DefaultEnvironment)
+from SCons.Script import AlwaysBuild, Builder, Default, DefaultEnvironment
 
+# Initialize defaults
 env = DefaultEnvironment()
+program = None
 
 # This file, HUH, what is it good for? Absolutely one thing (SAY IT AGAIN!)
 env.ProcessProgramDeps()
+
+# The environment built by the framework file needs to return here; otherwise
+# the build fails due to the environment's lack of awareness about the built
+# products.
+
+# Assess size of binary, taken from:
+# https://github.com/Wiz-IO/wizio-RPI/blob/main/builder/frameworks/build-pico-cmake.py
+
+prog_size = "$SIZETOOL -B "+ os.path.join(env.subst("$BUILD_DIR"),"${PROGNAME}.elf")
+check_prog_size = env.Alias("checkprogsize",os.path.join(env.subst("$BUILD_DIR"),"${PROGNAME}.elf"),[env.VerboseAction(prog_size, "Done.")])
+
