@@ -36,18 +36,3 @@ env.Replace(
 
 # Call cmake and make
 env.SConscript("frameworks/baremetal.py", exports = "env")
-
-# Assess size of binary, taken from:
-# https://github.com/Wiz-IO/wizio-RPI/blob/main/builder/frameworks/build-pico-cmake.py
-
-env.Execute("$SIZETOOL -B "+ os.path.join("$BUILD_DIR","${PROGNAME}.elf"), None)
-
-# Replaces the main compiler action with no action
-
-env.Replace(
-    SIZETOOL = '',
-    PROGSUFFIX = '',
-    PIOBUILDFILES = [],
-    BUILDERS = dict( ACT = Builder( action = env.VerboseAction( None, None ), suffix = '.none' ) ),
-)
-
